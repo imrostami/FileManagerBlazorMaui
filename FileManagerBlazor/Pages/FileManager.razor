@@ -1,0 +1,65 @@
+﻿@page "/"
+@using System.Text;
+@inject NavigationManager navigation;
+
+@code {
+    List<string> drives;
+    string osPathDrive = "";
+
+}
+
+<h3>FileManager</h3>
+
+
+<div class="row" style="margin-top:20px">
+    @{
+        foreach (var drive in drives)
+        {
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@drive</h5>
+
+                        @{
+                            if (osPathDrive.StartsWith(drive))
+                            {
+                                <p class="card-text">
+                                    Your <strong>System Drive</strong>
+                                </p>
+                            }
+                            else
+                            {
+                                <p class="card-text">
+                                    Your  <strong>Logical Drive</strong>
+                                </p>
+                            }
+                        }
+                        
+                        <button class="btn btn-primary" @onclick="@(e=>ShowDriveClick(drive))">Open Drive</button>
+                    </div>
+                </div>
+            </div>
+
+
+        }
+    }
+</div>
+
+
+@code {
+    protected override async void OnInitialized()
+    {
+
+        drives = FileService.GetSystemDrives();
+        osPathDrive = FileService.GetSystemDriveName();
+
+    }
+
+
+
+    private void ShowDriveClick(string driveTarget)
+    {
+        var encodedDriveTarget = PathEncoderContext.Base64Encode(driveTarget);
+        navigation.NavigateTo($"/showFiles/{encodedDriveTarget}");
+    }
+}

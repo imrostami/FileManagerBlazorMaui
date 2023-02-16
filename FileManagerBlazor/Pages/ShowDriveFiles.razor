@@ -1,0 +1,66 @@
+﻿@page "/showFiles/{TargetDriveName}"
+@using System.Text;
+
+@code{
+    string selectedPathString = "";
+    string decordeDriveName = "";
+}
+@code{
+
+
+    [Parameter]
+    public string TargetDriveName { get; set; }
+
+
+    protected override void OnParametersSet()
+    {
+        decordeDriveName = PathEncoderContext.Base64Decode(TargetDriveName);
+
+        selectedPathString = decordeDriveName;
+    }
+
+    
+}
+
+
+
+<div class="cm-address-bar-search" clear>
+    <div class="address-search">
+        <div class="pos">
+            <input type="text" class="address-search-input" value="@selectedPathString">
+            <div class="cm-button address-button"><i class="fas fa-arrow-right"></i></div>
+            <div class="address-short-btn"></div>
+        </div>
+    </div>
+    <div class="search-file-and-folder">
+        <div class="pos">
+            <input placeholder="Search.." type="text" class="files-search-input" />
+            <div class="cm-button file-search-button"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+</div>
+<div class="theme-structure big-file-manager">
+    <ul class="active-folder-wrapper">
+        @{
+            var directorys = Directory.GetDirectories(selectedPathString);
+            foreach (var dir in directorys)
+            {
+                <li data-file-icon="folder" class="empty-folder has-files-of-folder">
+                    <b>
+                        <i title="Back" class="cm-folder-back">
+                            <svg class="svg-inline--fa fa-angle-left fa-w-8" aria-hidden="true" data-prefix="fas" data-icon="angle-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" data-fa-i2svg="">
+                                <path fill="currentColor" d="M31.7 239l136-136c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9L127.9 256l96.4 96.4c9.4 9.4 9.4 24.6 0 33.9L201.7 409c-9.4 9.4-24.6 9.4-33.9 0l-136-136c-9.5-9.4-9.5-24.6-.1-34z"></path>
+                            </svg>
+
+                        </i>
+                        <svg class="svg-inline--fa fa-folder fa-w-16" aria-hidden="true" data-prefix="fas" data-icon="folder" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
+                            <path fill="currentColor" d="M464 128H272l-64-64H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V176c0-26.51-21.49-48-48-48z"></path>
+                        </svg>
+                        <span autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="false" class="name">@dir</span>
+                    </b>
+
+                </li>
+            }
+        }
+    </ul>
+</div>
